@@ -51,3 +51,17 @@ END;
 /
 
 -- refcursor.
+DECLARE
+    TYPE toy_inventory_cur_t IS REF CURSOR RETURN toy_inventory%ROWTYPE;
+    toy_inventory_cur toy_inventory_cur_t;
+BEGIN
+    OPEN toy_inventory_cur FOR SELECT * FROM toy_inventory;
+    
+    FOR l_toy_inventory IN toy_inventory_cur
+    LOOP
+        DBMS_OUTPUT.PUT_LINE('l_toy_inventory = ' || l_toy_inventory.id);
+    END LOOP;
+    
+    CLOSE toy_inventory_cur;
+END;
+/

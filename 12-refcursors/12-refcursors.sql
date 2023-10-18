@@ -65,3 +65,59 @@ BEGIN
     CLOSE toy_inventory_cur;
 END;
 /
+
+-----
+
+DECLARE
+    CURSOR toy_inventory_cur IS SELECT * FROM toy_inventory;
+BEGIN
+    --OPEN toy_inventory_cur FOR SELECT * FROM toy_inventory;
+    
+    FOR l_toy_inventory IN toy_inventory_cur
+    LOOP
+        DBMS_OUTPUT.PUT_LINE('l_toy_inventory = ' || l_toy_inventory.id);
+    END LOOP;
+    
+    --CLOSE toy_inventory_cur;
+END;
+/
+
+DECLARE
+    TYPE toy_inventory_cur_t IS REF CURSOR RETURN toy_inventory%ROWTYPE;
+    toy_inventory_cur toy_inventory_cur_t;
+BEGIN
+    OPEN toy_inventory_cur FOR SELECT * FROM toy_inventory;
+    
+    FOR l_toy_inventory IN toy_inventory_cur
+    LOOP
+        DBMS_OUTPUT.PUT_LINE('l_toy_inventory = ' || l_toy_inventory.id);
+    END LOOP;
+    
+    CLOSE toy_inventory_cur;
+END;
+/
+
+DECLARE
+    TYPE toy_inventory_cur_t IS REF CURSOR;
+    toy_inventory_cur toy_inventory_cur_t;
+    
+    TYPE toy_inventory_type IS RECORD(
+        ID NUMBER,
+        MANUFACTURER_ID NUMBER,
+        NUM_AVAILABLE NUMBER,
+        CREATED_DATE TIMESTAMP,
+        MODIFIED_DATE TIMESTAMP
+    );
+    l_toy_inventory toy_inventory_type;
+BEGIN
+    OPEN toy_inventory_cur FOR SELECT * FROM toy_inventory;
+    
+    LOOP
+        FETCH toy_inventory_cur INTO l_toy_inventory;
+        EXIT WHEN toy_inventory_cur%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE('l_toy_inventory = ' || l_toy_inventory.id);
+    END LOOP;
+    
+    CLOSE toy_inventory_cur;
+END;
+/

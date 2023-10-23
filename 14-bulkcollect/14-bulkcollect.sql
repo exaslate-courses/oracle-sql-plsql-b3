@@ -1,5 +1,27 @@
 -- Bulk collect
 
+DECLARE
+    l_manufacturer_id toy_inventory.manufacturer_id%TYPE;
+BEGIN
+    SELECT manufacturer_id INTO l_manufacturer_id FROM toy_inventory WHERE id=...;
+    
+    DBMS_OUTPUT.PUT_LINE(l_manufacturer_id);
+END;
+/
+
+DECLARE
+    TYPE man_id_nested_table_type IS TABLE OF NUMBER;
+    l_manufacturer_id man_id_nested_table_type;
+BEGIN
+    SELECT manufacturer_id BULK COLLECT INTO l_manufacturer_id FROM toy_inventory;
+    
+    FOR i IN 1..l_manufacturer_id.COUNT
+    LOOP
+        DBMS_OUTPUT.PUT_LINE(l_manufacturer_id(i));
+    END LOOP;
+END;
+/
+
 --
 
 DECLARE
